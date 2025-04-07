@@ -90,6 +90,11 @@ kubectl get nodes
 kubectl get pods -A
 
 
+# --- Автодополнение
+sudo apt-get install bash-completion
+echo 'source <(kubectl completion bash)' >> ~/.bashrc
+source ~/.bashrc
+
 # Проверка
 echo -e "\nПроверьте статус сервисов:"
 echo "  systemctl status containerd kubelet"
