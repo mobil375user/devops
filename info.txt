@@ -15,3 +15,10 @@ kubectl create secret tls default-ssl-certificate --namespace ingress-nginx --ke
  
  
  kubectl delete pod <pod-name> --grace-period=0 --force   - уничтожить под если не удаляеться
+ 
+ 
+ 
+ # --- Автодополнение
+sudo apt-get install bash-completion
+echo 'source <(kubectl completion bash)' >> ~/.bashrc
+source ~/.bashrc
