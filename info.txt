@@ -1,0 +1,17 @@
+https://wikimda.iba.by/pages/viewpageattachments.action?pageId=148670986&metadataLink=true
+
+https://hub.docker.com/repositories/edoiba  - образы Next
+ 
+https://gitlab.edo.iba/edo/next/-/pipelines   - образы git
+
+
+helm install system-misc-gotenberg ./gotenberg/
+kubectl delete pods --field-selector status.phase=Failed -A
+
+helm install system-ingress-nginx ./ingress-nginx/
+
+kubectl create secret tls default-ssl-certificate --namespace ingress-nginx --key server.key --cert server.crt
+ - --default-ssl-certificate=ingress-nginx/default-ssl-certificate - в values
+ 
+ 
+ kubectl delete pod <pod-name> --grace-period=0 --force   - уничтожить под если не удаляеться
