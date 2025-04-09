@@ -1,0 +1,1 @@
+docker build -f dockerAdv -t reginfo2010/next-front-all:v12 .

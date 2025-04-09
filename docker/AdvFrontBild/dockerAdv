@@ -1,0 +1,45 @@
+# Шаг 1: Сборка приложения (Node.js 16)
+FROM node:16 AS builder
+
+# Устанавливаем Git
+RUN apt-get install -y git && \
+    git config --global http.sslVerify false
+
+
+# Получаем URL репозитория из аргумента сборки
+# Копируем файл с паролем (предполагается, что он уже подготовлен)
+COPY git-credentials /root/.git-credentials
+RUN git config --global credential.helper store
+
+
+WORKDIR /app
+
+# Клонируем репозиторий (используем --branch для выбора ветки)
+RUN git clone https://gitlab.edo.iba/edo/next.git . && \
+    git checkout palata-dev
+
+WORKDIR /app/frontend/gtb
+
+# Копируем конфигурационный файл API
+COPY reactconf/const/api-route.js ./src/constants/
+COPY reactconf/.env ./
+
+# Устанавливаем зависимости и собираем
+RUN npm install && \
+    npm run build
+
+# ---
+# Шаг 2: Финальный образ с nginx
+FROM bitnami/nginx:1.27-debian-12
+
+# Установка рабочей директории
+WORKDIR /app
+
+# Копируем только результат сборки
+COPY --from=builder /app/frontend/gtb/build ./
+
+# 5. Копирование конфигурации Nginx
+COPY nginxconf/next.conf /opt/bitnami/nginx/conf/server_blocks/
+
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
